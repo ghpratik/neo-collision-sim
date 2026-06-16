@@ -4,6 +4,8 @@ import { Suspense, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Html, Line } from "@react-three/drei";
 import * as THREE from "three";
+import { Button } from "@/components/ui/button";
+import { SelectPlanet } from "@/components/simulation/SelectPlanet";
 
 /* -------------------------------------------------------------------- */
 /*  Data                                                                  */
@@ -369,43 +371,21 @@ export default function SolarSystemSimulation() {
       </Canvas>
 
       {/* Navigation panel */}
-      <div
-        style={{
-          position: "absolute",
-          top: 16,
-          left: 16,
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "6px",
-          maxWidth: "min(92vw, 560px)",
-          fontFamily: "system-ui, sans-serif",
-        }}
-      >
-        {BODY_NAMES.map((name) => (
-          <button
+      <div className="hidden md:flex flex-wrap gap-2 max-w-[92vw] absolute top-4 left-4 z-10">
+        <SelectPlanet bodies={BODY_NAMES} onSelect={(value) => goTo(value)} />
+        {/* {BODY_NAMES.map((name) => (
+          <Button
             key={name}
             onClick={() => goTo(name)}
-            style={{
-              padding: "6px 12px",
-              fontSize: "12px",
-              borderRadius: "999px",
-              border:
-                selectedName === name
-                  ? "1px solid #7fb2ff"
-                  : "1px solid rgba(255,255,255,0.15)",
-              background:
-                selectedName === name
-                  ? "rgba(127,178,255,0.18)"
-                  : "rgba(20,22,30,0.6)",
-              color: selectedName === name ? "#bfe0ff" : "#cfd6e6",
-              cursor: "pointer",
-              backdropFilter: "blur(6px)",
-              transition: "all 0.15s ease",
-            }}
+            className={
+              selectedName === name
+                ? "bg-primary/20 border-primary/50"
+                : "bg-card/40 border-border/60"
+            }
           >
             {name}
-          </button>
-        ))}
+          </Button>
+        ))} */}
       </div>
 
       {/* Time scale control */}

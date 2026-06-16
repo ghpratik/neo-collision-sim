@@ -85,11 +85,11 @@ function Scene({
 
   return (
     <>
-      <ambientLight intensity={0.6} />
+      {/* <ambientLight intensity={0.1} /> */}
       <Stars
-        radius={150}
+        radius={100}
         depth={80}
-        count={8000}
+        count={5000}
         factor={2.4}
         // fade
         speed={0.5}
@@ -159,7 +159,11 @@ export default function SolarSystemSimulation() {
     <div className="relative w-screen h-screen overflow-hidden">
       <Canvas
         camera={{ position: [0, 22, 46], fov: 50, near: 0.1, far: 2000 }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.2,
+        }}
         dpr={[1, 2]}
         style={{ width: "100%", height: "100%", display: "block" }}
       >
@@ -198,17 +202,7 @@ export default function SolarSystemSimulation() {
       </div>
 
       {/* Hint */}
-      <div
-        className="absolute z-10 bottom-4 right-4 opacity-90"
-        style={{
-          position: "absolute",
-          bottom: 18,
-          right: 16,
-          fontSize: "11px",
-          color: "#6b7280",
-          fontFamily: "system-ui, sans-serif",
-        }}
-      >
+      <div className="absolute z-10 bottom-4 right-4 opacity-90 text-xs text-muted-foreground">
         Drag to rotate · scroll to zoom · click a body to focus
       </div>
     </div>

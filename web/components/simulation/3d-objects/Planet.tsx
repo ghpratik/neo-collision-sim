@@ -42,6 +42,7 @@ export const Planet = ({
     <group>
       <OrbitRing radius={body.distance} />
       <group ref={pivotRef}>
+        <pointLight color="#fff8d0" intensity={100} distance={0} decay={2} />
         <group
           position={[body.distance, 0, 0]}
           ref={(obj) => {

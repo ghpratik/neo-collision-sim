@@ -200,13 +200,13 @@ export default function SolarSystemSimulation() {
       </div>
 
       {/* Time scale control */}
-      <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
+      <div className="w-full max-w-md absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
         <span className="text-xs font-medium text-muted-foreground">Speed</span>
         <Slider
           defaultValue={[15]}
           max={100}
           step={0.1}
-          className="mx-auto w-xs"
+          className="mx-auto"
           onValueChange={(value) => setTimeScale(value[0])}
           value={[timeScale]}
         />
@@ -216,7 +216,7 @@ export default function SolarSystemSimulation() {
       </div>
 
       {/* Hint */}
-      <div className="absolute z-10 bottom-4 right-4 opacity-90 text-xs text-muted-foreground">
+      <div className="absolute hidden md:block z-10 bottom-4 right-4 opacity-90 text-xs text-muted-foreground">
         Drag to rotate · scroll to zoom · click a body to focus
       </div>
     </div>

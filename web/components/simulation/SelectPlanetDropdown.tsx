@@ -21,7 +21,10 @@ export function SelectPlanet({ bodies, onSelect }: SelectPlanetProps) {
       <SelectTrigger className="w-full max-w-48 border border-border/60 bg-card/30 text-sm text-muted-foreground backdrop-blur-sm">
         <SelectValue placeholder="Select a planet or star" />
       </SelectTrigger>
-      <SelectContent className="bg-card/30 backdrop-blur-sm border border-border/60">
+      <SelectContent
+        position="popper"
+        className="bg-card/30 backdrop-blur-sm border border-border/60"
+      >
         <SelectGroup>
           <SelectLabel>Star</SelectLabel>
           <SelectItem value="Sun">Sun</SelectItem>

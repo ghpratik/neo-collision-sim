@@ -8,7 +8,8 @@ import { SelectPlanet } from "@/components/simulation/SelectPlanetDropdown";
 import { PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
-import { Sun } from "@/components/simulation/3d-objects/Sun";
+import { SunModel } from "@/components/models/Sun";
+// import { Sun } from "@/components/simulation/3d-objects/Sun";
 
 /* -------------------------------------------------------------------- */
 /*  Camera rig — flies to / tracks the selected target                    */
@@ -94,7 +95,12 @@ function Scene({
         speed={0.5}
       />
 
-      <Sun registerTarget={registerTarget} onSelect={handleSelect} />
+      {/* <Sun registerTarget={registerTarget} onSelect={handleSelect} /> */}
+      <SunModel
+        scale={SUN.radius / 7}
+        registerTarget={registerTarget}
+        onSelect={handleSelect}
+      />
 
       {PLANETS.map((p) => (
         <Planet
@@ -171,7 +177,7 @@ export default function SolarSystemSimulation() {
       </Canvas>
 
       {/* Navigation panel */}
-      <div className="hidden md:flex flex-wrap gap-2 max-w-[92vw] absolute top-4 left-4 z-10">
+      <div className="max-w-[92vw] absolute top-4 left-4 z-10">
         <SelectPlanet bodies={BODY_NAMES} onSelect={(value) => goTo(value)} />
       </div>
 

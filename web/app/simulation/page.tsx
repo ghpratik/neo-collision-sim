@@ -8,7 +8,7 @@ import { SelectPlanet } from "@/components/simulation/SelectPlanetDropdown";
 import { PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
-import { SunModel } from "@/components/models/Sun";
+import { SunModel } from "@/components/simulation/3d-objects/Sun";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";

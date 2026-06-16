@@ -17,7 +17,7 @@ export interface BodyDef {
   };
 }
 
-export const SUN = { name: "Sun", color: "#FDB813", radius: 3.2 };
+export const SUN = { name: "Sun", color: "#FDB813", radius: 5 };
 
 export const PLANETS: BodyDef[] = [
   {

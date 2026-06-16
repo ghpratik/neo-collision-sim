@@ -239,6 +239,7 @@ export default function SolarSystemSimulation() {
 
       {/* Hint */}
       <div
+        className="absolute z-10 bottom-4 right-4 opacity-90"
         style={{
           position: "absolute",
           bottom: 18,

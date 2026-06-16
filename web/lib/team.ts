@@ -16,7 +16,7 @@ export const team: TeamMember[] = [
   {
     name: "Team Member Two",
     role: "3D Simulation Engineer",
-    focus: "React Three Fiber rendering pipeline",
+    focus: "React Three Fiber rendering & data viz",
     initials: "M2",
   },
   {
@@ -24,11 +24,5 @@ export const team: TeamMember[] = [
     role: "Data & Forecasting",
     focus: "NEO datasets & collision prediction",
     initials: "M3",
-  },
-  {
-    name: "Team Member Four",
-    role: "Frontend & Visualization",
-    focus: "UI, dashboards & data viz",
-    initials: "M4",
   },
 ];

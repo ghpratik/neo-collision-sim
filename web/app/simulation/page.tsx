@@ -8,43 +8,7 @@ import { SelectPlanet } from "@/components/simulation/SelectPlanetDropdown";
 import { PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
-
-/* -------------------------------------------------------------------- */
-/*  Sun                                                                    */
-/* -------------------------------------------------------------------- */
-
-function Sun({
-  registerTarget,
-  onSelect,
-}: {
-  registerTarget: (name: string, obj: THREE.Object3D) => void;
-  onSelect: (name: string, obj: THREE.Object3D) => void;
-}) {
-  const meshRef = useRef<THREE.Mesh>(null!);
-
-  useFrame((_, delta) => {
-    if (meshRef.current) meshRef.current.rotation.y += delta * 0.05;
-  });
-
-  return (
-    <mesh
-      ref={(obj) => {
-        if (obj) {
-          meshRef.current = obj;
-          registerTarget(SUN.name, obj);
-        }
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        if (meshRef.current) onSelect(SUN.name, meshRef.current);
-      }}
-    >
-      <sphereGeometry args={[SUN.radius, 48, 48]} />
-      <meshBasicMaterial color={SUN.color} />
-      <pointLight color="#fff4d6" intensity={3.5} distance={200} decay={1.5} />
-    </mesh>
-  );
-}
+import { Sun } from "@/components/simulation/3d-objects/Sun";
 
 /* -------------------------------------------------------------------- */
 /*  Camera rig — flies to / tracks the selected target                    */
@@ -120,14 +84,14 @@ function Scene({
 
   return (
     <>
-      <ambientLight intensity={0.06} />
+      <ambientLight intensity={0.6} />
       <Stars
-        radius={300}
+        radius={150}
         depth={80}
-        count={6000}
+        count={8000}
         factor={2.4}
-        fade
-        speed={0.4}
+        // fade
+        speed={0.5}
       />
 
       <Sun registerTarget={registerTarget} onSelect={handleSelect} />

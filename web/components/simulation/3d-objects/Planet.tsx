@@ -78,18 +78,7 @@ export const Planet = ({
           )}
 
           <Html distanceFactor={28} position={[0, body.radius + 0.9, 0]} center>
-            <div
-              style={{
-                color: "#cfd6e6",
-                fontSize: "11px",
-                fontFamily: "system-ui, sans-serif",
-                whiteSpace: "nowrap",
-                opacity: 0.75,
-                textShadow: "0 0 4px rgba(0,0,0,0.9)",
-                pointerEvents: "none",
-                userSelect: "none",
-              }}
-            >
+            <div className="text-sm text-muted-foreground pointer-events-none select-none whitespace-nowrap opacity-80 text-shadow">
               {body.name}
             </div>
           </Html>

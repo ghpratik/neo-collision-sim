@@ -35,9 +35,6 @@ export function SunModel({
 }: SunModelProps) {
   const group = React.useRef<THREE.Group>(null);
 
-  const corona1 = React.useRef<THREE.Mesh>(null);
-  const corona2 = React.useRef<THREE.Mesh>(null);
-
   const { nodes, materials, animations } = useGLTF(
     "/models/sun.glb",
   ) as unknown as GLTFResult;

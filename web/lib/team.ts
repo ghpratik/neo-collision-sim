@@ -8,21 +8,21 @@ export type TeamMember = {
 // Update these with your actual team details.
 export const team: TeamMember[] = [
   {
-    name: "Team Member One",
-    role: "Lead / Orbital Mechanics",
-    focus: "Trajectory modeling & impact probability",
-    initials: "M1",
-  },
-  {
-    name: "Team Member Two",
-    role: "3D Simulation Engineer",
-    focus: "React Three Fiber rendering & data viz",
-    initials: "M2",
-  },
-  {
-    name: "Team Member Three",
-    role: "Data & Forecasting",
+    name: "Raman Jangam",
+    role: "Student at ISM",
     focus: "NEO datasets & collision prediction",
-    initials: "M3",
+    initials: "RJ",
+  },
+  {
+    name: "Pratik Gaikwad",
+    role: "Student at ISM",
+    focus: "Real-time rendering & physics simulation",
+    initials: "PG",
+  },
+  {
+    name: "Satyam Satyarthi",
+    role: "Student at ISM",
+    focus: "Trajectory modeling & impact probability",
+    initials: "SS",
   },
 ];

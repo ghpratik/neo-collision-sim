@@ -26,7 +26,8 @@ export function CtaFooter() {
       </div>
 
       <p className="mt-10 text-center text-xs text-muted-foreground/70">
-        NEO Collision Simulator &mdash; Academic Research Project
+        NEO Collision Simulator &mdash; Academic Simulation and Forecasting
+        Project
       </p>
     </footer>
   );

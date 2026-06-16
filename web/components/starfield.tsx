@@ -23,10 +23,7 @@ export function Starfield() {
     let height = (canvas.height = window.innerHeight);
     let animationId = 0;
 
-    const STAR_COUNT = Math.min(
-      280,
-      Math.floor((width * height) / 6000),
-    );
+    const STAR_COUNT = Math.min(280, Math.floor((width * height) / 6000));
 
     let stars: Star[] = [];
 

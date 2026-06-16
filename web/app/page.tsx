@@ -7,7 +7,7 @@ import { CtaFooter } from "@/components/cta-footer";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-background">
+    <main className="relative min-h-screen overflow-x-hidden">
       <Starfield />
       <SiteNav />
       <Hero />

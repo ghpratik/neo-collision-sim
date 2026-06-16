@@ -35,8 +35,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
+        "bg-background",
         "antialiased",
         geistSans.variable,
         geistMono.variable,

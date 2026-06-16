@@ -5,8 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
 import { SelectPlanet } from "@/components/simulation/SelectPlanetDropdown";
-import { BodyDef, PLANETS, SUN } from "@/lib/simulation/data";
-import { OrbitRing } from "@/components/simulation/3d-objects/OrbitRing";
+import { PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
 
@@ -215,15 +214,6 @@ export default function SolarSystemSimulation() {
       {/* Time scale control */}
       <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
         <span className="text-xs font-medium text-muted-foreground">Speed</span>
-        {/* <input
-          type="range"
-          min={0}
-          max={5}
-          step={0.1}
-          value={timeScale}
-          onChange={(e) => setTimeScale(parseFloat(e.target.value))}
-          style={{ width: "120px" }}
-        /> */}
         <Slider
           defaultValue={[3]}
           max={30}

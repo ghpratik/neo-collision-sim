@@ -9,6 +9,9 @@ import { PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
 import { SunModel } from "@/components/models/Sun";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 // import { Sun } from "@/components/simulation/3d-objects/Sun";
 
 /* -------------------------------------------------------------------- */
@@ -180,8 +183,19 @@ export default function SolarSystemSimulation() {
         </Suspense>
       </Canvas>
 
+      {/* Go Home Button */}
+      <Button
+        variant="outline"
+        size="sm"
+        className="absolute top-4 left-4 z-10 bg-background/30 backdrop-blur-sm"
+        asChild
+      >
+        <Link href="/">
+          <ArrowLeft className="h-4 w-4 mr-1" /> Go Home
+        </Link>
+      </Button>
       {/* Navigation panel */}
-      <div className="max-w-[92vw] absolute top-4 left-4 z-10">
+      <div className="max-w-[92vw] absolute top-4 right-4 z-10">
         <SelectPlanet bodies={BODY_NAMES} onSelect={(value) => goTo(value)} />
       </div>
 

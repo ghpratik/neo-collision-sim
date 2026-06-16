@@ -29,7 +29,7 @@ export const Planet = ({
   const angleRef = useRef(Math.random() * Math.PI * 2);
 
   useFrame((_, delta) => {
-    angleRef.current += body.speed * delta * timeScale;
+    angleRef.current += body.speed * delta * timeScale * 0.0219;
     if (pivotRef.current) {
       pivotRef.current.rotation.y = angleRef.current;
     }

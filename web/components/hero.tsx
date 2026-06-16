@@ -10,9 +10,9 @@ export function Hero() {
         <img
           src="/images/neo-hero.png"
           alt="A near-Earth asteroid drifting through deep space toward Earth"
-          className="h-full w-full object-cover opacity-60"
+          className="h-full w-full object-cover opacity-80"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-background/40 via-background/70 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background/30 via-background/60 to-background" />
       </div>
 
       <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-xs font-medium tracking-widest text-primary uppercase">

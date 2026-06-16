@@ -65,7 +65,7 @@ export function SunModel({
       scale={SUN.radius / 7}
     >
       {/* --------------------------- LIGHT SOURCE --------------------------- */}
-      <pointLight color="#fff4d6" intensity={8000} distance={0} decay={2} />
+      <pointLight color="#fff4d6" intensity={1000} distance={0} decay={2} />
 
       {/* --------------------------- SUN MODEL --------------------------- */}
       <group name="Sketchfab_Scene">

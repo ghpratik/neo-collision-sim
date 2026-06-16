@@ -6,9 +6,10 @@ import * as THREE from "three";
 
 import { Html } from "@react-three/drei";
 import { BodyDef } from "@/lib/simulation/data";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrbitRing } from "./OrbitRing";
+import { useLoader } from "@react-three/fiber";
 
 export const Planet = ({
   body,
@@ -27,6 +28,18 @@ export const Planet = ({
   const meshRef = useRef<THREE.Mesh>(null!);
   // eslint-disable-next-line react-hooks/purity
   const angleRef = useRef(Math.random() * Math.PI * 2);
+  const dayMap = useLoader(
+    THREE.TextureLoader,
+    body.texture?.day ?? "/textures/default.jpg",
+  );
+  const nightMap = body.texture?.night
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useLoader(THREE.TextureLoader, body.texture.night)
+    : null;
+  const ringMap = body.texture?.ring
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useLoader(THREE.TextureLoader, body.texture.ring)
+    : null;
 
   useFrame((_, delta) => {
     angleRef.current += body.speed * delta * timeScale * 0.0219;
@@ -38,11 +51,26 @@ export const Planet = ({
     }
   });
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    dayMap.colorSpace = THREE.SRGBColorSpace;
+
+    if (nightMap) {
+      // eslint-disable-next-line react-hooks/immutability
+      nightMap.colorSpace = THREE.SRGBColorSpace;
+    }
+
+    if (ringMap) {
+      // eslint-disable-next-line react-hooks/immutability
+      ringMap.colorSpace = THREE.SRGBColorSpace;
+    }
+  }, [dayMap, nightMap, ringMap]);
+
   return (
     <group>
       <OrbitRing radius={body.distance} />
       <group ref={pivotRef}>
-        <pointLight color="#fff8d0" intensity={100} distance={0} decay={2} />
+        {/* <pointLight color="#fff8d0" intensity={100} distance={0} decay={2} /> */}
         <group
           position={[body.distance, 0, 0]}
           ref={(obj) => {
@@ -57,22 +85,35 @@ export const Planet = ({
             }}
           >
             <sphereGeometry args={[body.radius, 32, 32]} />
-            <meshStandardMaterial
-              color={body.color}
-              emissive={body.color}
-              emissiveIntensity={selectedName === body.name ? 0.6 : 0.08}
-              roughness={0.85}
-            />
+            {nightMap ? (
+              <meshStandardMaterial
+                map={dayMap}
+                emissiveMap={nightMap}
+                emissive="white"
+                emissiveIntensity={1}
+                // emissiveIntensity={selectedName === body.name ? 1 : 0.5}
+                roughness={0.9}
+                metalness={0}
+              />
+            ) : (
+              <meshStandardMaterial
+                map={dayMap}
+                emissiveIntensity={selectedName === body.name ? 1 : 0.5}
+                roughness={0.9}
+                metalness={0}
+              />
+            )}
           </mesh>
 
           {body.ring && (
             <mesh rotation={[Math.PI / 2.1, 0, 0]}>
               <ringGeometry args={[body.ring.inner, body.ring.outer, 64]} />
               <meshBasicMaterial
-                color={body.ring.color}
+                map={ringMap}
                 transparent
-                opacity={0.55}
+                opacity={0.9}
                 side={THREE.DoubleSide}
+                depthWrite={false}
               />
             </mesh>
           )}

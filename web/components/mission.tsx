@@ -39,11 +39,11 @@ export function Mission() {
     <section id="mission" className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">
         {/* Stats strip */}
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/40 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/60 lg:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="bg-card/60 p-6 text-center backdrop-blur-sm"
+              className="p-6 text-center bg-card/40 transition-colors hover:bg-background/50"
             >
               <div className="font-heading text-2xl font-bold text-primary sm:text-3xl">
                 {stat.value}
@@ -76,7 +76,7 @@ export function Mission() {
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="rounded-xl border border-border/60 bg-card/40 p-5 backdrop-blur-sm transition-colors hover:border-primary/50"
+                  className="rounded-xl border border-border/60 bg-card/40 p-5 transition-colors hover:border-primary/50"
                 >
                   <feature.icon className="h-6 w-6 text-primary" />
                   <h3 className="mt-3 font-heading text-base font-semibold">
@@ -90,7 +90,7 @@ export function Mission() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-md">
+          <div className="relative mx-auto w-full p-4">
             <div className="absolute -inset-4 -z-10 rounded-full bg-primary/10 blur-3xl" />
             <img
               src="/images/orbit-diagram.png"

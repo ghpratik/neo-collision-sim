@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function CtaFooter() {
   return (
     <footer className="relative px-6 pb-12">
-      <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-primary/30 bg-primary/10 px-8 py-16 text-center backdrop-blur-sm">
+      <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-primary/30 bg-primary/10 px-8 py-16 text-center">
         <h2 className="font-heading text-3xl font-bold tracking-tight text-balance sm:text-4xl">
           Ready to run a collision scenario?
         </h2>

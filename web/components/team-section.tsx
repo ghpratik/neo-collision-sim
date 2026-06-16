@@ -12,7 +12,7 @@ export function TeamSection() {
             Meet the Team
           </h2>
           <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-muted-foreground text-pretty">
-            The researchers and engineers behind the NEO Collision Simulator.
+            The minds behind the NEO Collision Simulator.
           </p>
         </div>
 
@@ -20,10 +20,10 @@ export function TeamSection() {
           {team.map((member) => (
             <div
               key={member.name}
-              className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-sm transition-colors hover:border-primary/50"
+              className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-6 text-center transition-colors hover:border-primary/50"
             >
               <div className="absolute -top-12 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full bg-primary/20 blur-2xl transition-opacity group-hover:opacity-100 opacity-50" />
-              <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-heading text-xl font-bold text-primary">
+              <div className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-heading text-xl font-bold text-primary">
                 {member.initials}
               </div>
               <h3 className="mt-5 font-heading text-lg font-semibold">

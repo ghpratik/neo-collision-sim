@@ -149,7 +149,7 @@ export default function SolarSystemSimulation() {
     obj: THREE.Object3D;
     radius: number;
   } | null>(null);
-  const [timeScale, setTimeScale] = useState(15);
+  const [timeScale, setTimeScale] = useState(10);
 
   const goTo = (name: string) => {
     const obj = targetsRef.current[name];
@@ -207,15 +207,15 @@ export default function SolarSystemSimulation() {
       <div className="w-full max-w-md absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
         <span className="text-xs font-medium text-muted-foreground">Speed</span>
         <Slider
-          defaultValue={[15]}
+          defaultValue={[10]}
           max={100}
           step={0.1}
           className="mx-auto"
           onValueChange={(value) => setTimeScale(value[0])}
           value={[timeScale]}
         />
-        <span className="text-xs font-medium text-muted-foreground">
-          {timeScale.toFixed(1)}x
+        <span className="text-xs font-medium text-muted-foreground text-nowrap">
+          {timeScale.toFixed(1)} days/sec
         </span>
       </div>
 

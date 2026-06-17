@@ -61,17 +61,15 @@ function CameraRig({
 function Scene({
   targets,
   selectedName,
-  setSelectedName,
   flyTarget,
-  setFlyTarget,
+  goTo,
   controlsRef,
   timeScale,
 }: {
   targets: React.RefObject<Record<string, THREE.Object3D>>;
   selectedName: string | null;
-  setSelectedName: (n: string) => void;
   flyTarget: { obj: THREE.Object3D; radius: number } | null;
-  setFlyTarget: (t: { obj: THREE.Object3D; radius: number } | null) => void;
+  goTo: (name: string) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   controlsRef: React.RefObject<any>;
   timeScale: number;
@@ -79,12 +77,6 @@ function Scene({
   const registerTarget = (name: string, obj: THREE.Object3D) => {
     // eslint-disable-next-line react-hooks/immutability
     if (targets.current) targets.current[name] = obj;
-  };
-
-  const handleSelect = (name: string, obj: THREE.Object3D) => {
-    setSelectedName(name);
-    const body = [EARTH, ...PLANETS].find((p) => p.name === name);
-    setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
   };
 
   return (
@@ -103,13 +95,13 @@ function Scene({
       <SunModel
         scale={SUN.radius / 7}
         registerTarget={registerTarget}
-        onSelect={handleSelect}
+        onSelect={goTo}
       />
 
       <Earth
         body={EARTH}
         registerTarget={registerTarget}
-        onSelect={handleSelect}
+        onSelect={goTo}
         selectedName={selectedName}
         timeScale={timeScale}
       />
@@ -119,7 +111,7 @@ function Scene({
           key={p.name}
           body={p}
           registerTarget={registerTarget}
-          onSelect={handleSelect}
+          onSelect={goTo}
           selectedName={selectedName}
           timeScale={timeScale}
         />
@@ -183,9 +175,8 @@ export default function SolarSystemSimulation() {
           <Scene
             targets={targetsRef}
             selectedName={selectedName}
-            setSelectedName={setSelectedName}
             flyTarget={flyTarget}
-            setFlyTarget={setFlyTarget}
+            goTo={goTo}
             controlsRef={controlsRef}
             timeScale={timeScale}
           />

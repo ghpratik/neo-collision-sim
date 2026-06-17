@@ -20,7 +20,7 @@ export const Planet = ({
 }: {
   body: BodyDef;
   registerTarget: (name: string, obj: THREE.Object3D) => void;
-  onSelect: (name: string, obj: THREE.Object3D) => void;
+  onSelect: (name: string) => void;
   selectedName: string | null;
   timeScale: number;
 }) => {
@@ -106,7 +106,7 @@ export const Planet = ({
             ref={meshRef}
             onClick={(e) => {
               e.stopPropagation();
-              if (meshRef.current) onSelect(body.name, meshRef.current);
+              onSelect(body.name);
             }}
           >
             <sphereGeometry args={[body.radius, 32, 32]} />

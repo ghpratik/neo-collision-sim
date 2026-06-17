@@ -37,7 +37,7 @@ export function SunModel({ registerTarget, onSelect, ...props }: any) {
       {/* IMPORTANT: Sun should be emissive + not depend on light */}
       <pointLight intensity={3000} color="#fff4d6" />
 
-      <mesh ref={meshRef}>
+      <mesh ref={meshRef} onClick={() => onSelect(SUN.name)}>
         <sphereGeometry args={[SUN.radius, 64, 64]} />
 
         <meshBasicMaterial map={sunTexture} toneMapped={false} />

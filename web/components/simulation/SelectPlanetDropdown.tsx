@@ -10,14 +10,18 @@ import {
 } from "@/components/ui/select";
 
 interface SelectPlanetProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   bodies: string[];
+  selectedName: string | null;
   onSelect: (value: string) => void;
 }
 
-export function SelectPlanet({ bodies, onSelect }: SelectPlanetProps) {
+export function SelectPlanet({
+  bodies,
+  selectedName,
+  onSelect,
+}: SelectPlanetProps) {
   return (
-    <Select onValueChange={onSelect}>
+    <Select onValueChange={onSelect} value={selectedName || undefined}>
       <SelectTrigger className="w-full max-w-48 border border-border/60 bg-card/30 text-sm text-muted-foreground backdrop-blur-sm">
         <SelectValue placeholder="Select a planet or star" />
       </SelectTrigger>

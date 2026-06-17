@@ -196,7 +196,11 @@ export default function SolarSystemSimulation() {
       </Button>
       {/* Navigation panel */}
       <div className="max-w-[92vw] absolute top-4 right-4 z-10">
-        <SelectPlanet bodies={BODY_NAMES} onSelect={(value) => goTo(value)} />
+        <SelectPlanet
+          bodies={BODY_NAMES}
+          selectedName={selectedName}
+          onSelect={(value) => goTo(value)}
+        />
       </div>
 
       {/* Time scale control */}

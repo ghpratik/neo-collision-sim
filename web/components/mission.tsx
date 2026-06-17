@@ -92,11 +92,18 @@ export function Mission() {
 
           <div className="relative mx-auto w-full p-4">
             <div className="absolute -inset-4 -z-10 rounded-full bg-primary/10 blur-3xl" />
-            <img
-              src="/images/orbit-diagram.png"
-              alt="Top-down orbital diagram showing an asteroid's predicted collision trajectory crossing Earth's orbit"
-              className="w-full rounded-2xl border border-border/60"
-            />
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source
+                src="/illustrations/earth-globe-network-connection.webm"
+                type="video/webm"
+              />
+            </video>
           </div>
         </div>
       </div>

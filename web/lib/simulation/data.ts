@@ -43,6 +43,18 @@ export const EARTH: EarthDef = {
   },
 };
 
+export const MOON: EarthDef = {
+  name: "Moon",
+  color: "#888888",
+  radius: 0.15,
+  distance: 2,
+  speed: 1.6,
+  texture: {
+    day: "/textures/moon.jpg",
+    night: "/textures/moon.jpg",
+  },
+};
+
 export const PLANETS: BodyDef[] = [
   {
     name: "Mercury",

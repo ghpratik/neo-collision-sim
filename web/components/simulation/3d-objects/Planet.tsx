@@ -4,12 +4,12 @@
 
 import * as THREE from "three";
 
-import { Html } from "@react-three/drei";
 import { BodyDef } from "@/lib/simulation/data";
 import React, { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrbitRing } from "./OrbitRing";
 import { useLoader } from "@react-three/fiber";
+import BodyLabel from "../BodyLabel";
 
 export const Planet = ({
   body,
@@ -132,11 +132,7 @@ export const Planet = ({
             </mesh>
           )}
 
-          <Html distanceFactor={28} position={[0, body.radius + 0.9, 0]} center>
-            <div className="text-sm text-muted-foreground pointer-events-none select-none whitespace-nowrap opacity-80 text-shadow">
-              {body.name}
-            </div>
-          </Html>
+          <BodyLabel name={body.name} radius={body.radius} />
         </group>
       </group>
     </group>

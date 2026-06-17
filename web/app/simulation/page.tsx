@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
 import { SelectPlanet } from "@/components/simulation/SelectPlanetDropdown";
-import { EARTH, PLANETS, SUN } from "@/lib/simulation/data";
+import { EARTH, MOON, PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
 import { SunModel } from "@/components/simulation/3d-objects/Sun";
@@ -39,7 +39,7 @@ function CameraRig({
     controlsRef.current.target.lerp(worldPos.current, Math.min(1, delta * 3));
 
     // Keep camera at a comfortable distance proportional to body size.
-    const offsetDist = Math.max(target.radius * 6, 4);
+    const offsetDist = Math.max(target.radius * 5, 0.3);
     desired.current
       .copy(camera.position)
       .sub(controlsRef.current.target)
@@ -137,7 +137,12 @@ function Scene({
 /*  Top-level page component                                              */
 /* -------------------------------------------------------------------- */
 
-const BODY_NAMES = [SUN.name, EARTH.name, ...PLANETS.map((p) => p.name)];
+const BODY_NAMES = [
+  SUN.name,
+  EARTH.name,
+  MOON.name,
+  ...PLANETS.map((p) => p.name),
+];
 
 export default function SolarSystemSimulation() {
   const targetsRef = useRef<Record<string, THREE.Object3D>>({});
@@ -155,7 +160,13 @@ export default function SolarSystemSimulation() {
     const obj = targetsRef.current[name];
     if (!obj) return;
     setSelectedName(name);
-    const body = [EARTH, ...PLANETS].find((p) => p.name === name);
+    const body = [EARTH, MOON, ...PLANETS].find((p) => p.name === name);
+    console.log(
+      "Flying to",
+      name,
+      "with radius",
+      body ? body.radius : SUN.radius,
+    );
     setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
   };
 

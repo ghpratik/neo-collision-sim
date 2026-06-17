@@ -4,12 +4,13 @@
 
 import * as THREE from "three";
 
-import { Html } from "@react-three/drei";
-import { EarthDef } from "@/lib/simulation/data";
+import { EarthDef, MOON } from "@/lib/simulation/data";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrbitRing } from "./OrbitRing";
 import { useLoader } from "@react-three/fiber";
+import { Moon } from "./Moon";
+import BodyLabel from "../BodyLabel";
 
 export const Earth = ({
   body,
@@ -20,14 +21,14 @@ export const Earth = ({
 }: {
   body: EarthDef;
   registerTarget: (name: string, obj: THREE.Object3D) => void;
-  onSelect: (name: string, obj: THREE.Object3D) => void;
+  onSelect: (name: string) => void;
   selectedName: string | null;
   timeScale: number;
 }) => {
-  const pivotRef = useRef<THREE.Group>(null!);
-  const meshRef = useRef<THREE.Mesh>(null!);
   // eslint-disable-next-line react-hooks/purity
   const angleRef = useRef(Math.random() * Math.PI * 2);
+  const earthOrbitRef = useRef<THREE.Group>(null!);
+  const earthSpinRef = useRef<THREE.Mesh>(null!);
   const dayMap = useLoader(
     THREE.TextureLoader,
     body.texture?.day ?? "/textures/default.jpg",
@@ -39,15 +40,23 @@ export const Earth = ({
 
   useFrame((_, delta) => {
     angleRef.current += body.speed * delta * timeScale * 0.0219;
-    if (pivotRef.current) {
-      pivotRef.current.rotation.y = angleRef.current;
+    // Earth orbit around Sun
+    if (earthOrbitRef.current) {
+      earthOrbitRef.current.rotation.y = angleRef.current;
     }
-    if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.6;
+
+    // Earth self-rotation
+    if (earthSpinRef.current) {
+      earthSpinRef.current.rotation.y += delta * 0.6;
     }
   });
 
+  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
+    // Register Earth as a target for camera focus
+    if (earthSpinRef.current) {
+      registerTarget(body.name, earthSpinRef.current);
+    }
     // eslint-disable-next-line react-hooks/immutability
     dayMap.colorSpace = THREE.SRGBColorSpace;
 
@@ -58,40 +67,40 @@ export const Earth = ({
   }, [dayMap, nightMap]);
 
   return (
-    <group>
+    <group ref={earthOrbitRef}>
       <OrbitRing radius={body.distance} />
-      <group ref={pivotRef}>
-        {/* <pointLight color="#fff8d0" intensity={100} distance={0} decay={2} /> */}
-        <group
-          position={[body.distance, 0, 0]}
-          ref={(obj) => {
-            if (obj) registerTarget(body.name, obj);
+
+      <group position={[body.distance, 0, 0]}>
+        <mesh
+          ref={earthSpinRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (earthSpinRef.current) {
+              onSelect(body.name);
+            }
           }}
         >
-          <mesh
-            ref={meshRef}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (meshRef.current) onSelect(body.name, meshRef.current);
-            }}
-          >
-            <sphereGeometry args={[body.radius, 32, 32]} />
-            <meshStandardMaterial
-              map={dayMap}
-              emissiveMap={nightMap}
-              emissive="blue"
-              emissiveIntensity={selectedName === body.name ? 1 : 0.5}
-              roughness={0.9}
-              metalness={0}
-            />
-          </mesh>
+          <sphereGeometry args={[body.radius, 32, 32]} />
+          <meshStandardMaterial
+            map={dayMap}
+            emissiveMap={nightMap}
+            emissive="blue"
+            emissiveIntensity={selectedName === body.name ? 1 : 0.5}
+            roughness={0.9}
+          />
+        </mesh>
 
-          <Html distanceFactor={28} position={[0, body.radius + 0.9, 0]} center>
-            <div className="text-sm text-muted-foreground pointer-events-none select-none whitespace-nowrap opacity-80 text-shadow">
-              {body.name}
-            </div>
-          </Html>
-        </group>
+        <BodyLabel name={body.name} radius={body.radius} />
+
+        {/* 👇 MOON GOES INSIDE EARTH */}
+        <Moon
+          body={MOON}
+          parentRadius={body.radius}
+          timeScale={timeScale}
+          registerTarget={registerTarget}
+          onSelect={onSelect}
+          selectedName={selectedName}
+        />
       </group>
     </group>
   );

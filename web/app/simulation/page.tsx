@@ -204,7 +204,7 @@ export default function SolarSystemSimulation() {
       </div>
 
       {/* Time scale control */}
-      <div className="w-full max-w-md absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
+      <div className="w-full max-w-sm lg:max-w-md absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
         <span className="text-xs font-medium text-muted-foreground">Speed</span>
         <Slider
           defaultValue={[10]}

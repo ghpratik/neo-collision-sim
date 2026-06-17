@@ -12,17 +12,41 @@ export interface BodyDef {
   ring?: { inner: number; outer: number; color: string }; // Saturn
   texture?: {
     day?: string;
-    night?: string;
     ring?: string;
+  };
+}
+
+export interface EarthDef {
+  name: string;
+  color: string;
+  radius: number; // visual radius (log-scaled, not to real scale)
+  distance: number; // visual orbit radius from the sun
+  speed: number; // radians / second (relative, exaggerated for visibility)
+  tilt?: number; // axial tilt, purely decorative
+  texture: {
+    day: string;
+    night: string;
   };
 }
 
 export const SUN = { name: "Sun", color: "#FDB813", radius: 5 };
 
+export const EARTH: EarthDef = {
+  name: "Earth",
+  color: "#3D7FD9",
+  radius: 0.55,
+  distance: 14,
+  speed: 1,
+  texture: {
+    day: "/textures/earth_daymap.jpg",
+    night: "/textures/earth_nightmap.jpg",
+  },
+};
+
 export const PLANETS: BodyDef[] = [
   {
     name: "Mercury",
-    color: "#9C9C94",
+    color: "#33332c",
     radius: 0.32,
     distance: 7,
     speed: 4.1478,
@@ -32,7 +56,7 @@ export const PLANETS: BodyDef[] = [
   },
   {
     name: "Venus",
-    color: "#E8C27A",
+    color: "#241b0b",
     radius: 0.5,
     distance: 10,
     speed: 1.6222,
@@ -41,19 +65,8 @@ export const PLANETS: BodyDef[] = [
     },
   },
   {
-    name: "Earth",
-    color: "#3D7FD9",
-    radius: 0.55,
-    distance: 14,
-    speed: 1,
-    texture: {
-      day: "/textures/earth_daymap.jpg",
-      night: "/textures/earth_nightmap.jpg",
-    },
-  },
-  {
     name: "Mars",
-    color: "#C1502E",
+    color: "#1c0c06",
     radius: 0.42,
     distance: 18,
     speed: 0.5312,
@@ -63,7 +76,7 @@ export const PLANETS: BodyDef[] = [
   },
   {
     name: "Jupiter",
-    color: "#D8A268",
+    color: "#1f150b",
     radius: 1.7,
     distance: 26,
     speed: 0.08431,
@@ -73,7 +86,7 @@ export const PLANETS: BodyDef[] = [
   },
   {
     name: "Saturn",
-    color: "#E3C589",
+    color: "#1f1a0f",
     radius: 1.45,
     distance: 34,
     speed: 0.0339,
@@ -85,7 +98,7 @@ export const PLANETS: BodyDef[] = [
   },
   {
     name: "Uranus",
-    color: "#9FD0DD",
+    color: "#151f21",
     radius: 1.0,
     distance: 41,
     speed: 0.0118,
@@ -95,7 +108,7 @@ export const PLANETS: BodyDef[] = [
   },
   {
     name: "Neptune",
-    color: "#4D72D9",
+    color: "#0c1224",
     radius: 0.97,
     distance: 48,
     speed: 0.0061,

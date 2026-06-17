@@ -5,13 +5,14 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
 import { SelectPlanet } from "@/components/simulation/SelectPlanetDropdown";
-import { PLANETS, SUN } from "@/lib/simulation/data";
+import { EARTH, PLANETS, SUN } from "@/lib/simulation/data";
 import { Planet } from "@/components/simulation/3d-objects/Planet";
 import { Slider } from "@/components/ui/slider";
 import { SunModel } from "@/components/simulation/3d-objects/Sun";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { Earth } from "@/components/simulation/3d-objects/Earth";
 // import { Sun } from "@/components/simulation/3d-objects/Sun";
 
 /* -------------------------------------------------------------------- */
@@ -82,8 +83,8 @@ function Scene({
 
   const handleSelect = (name: string, obj: THREE.Object3D) => {
     setSelectedName(name);
-    const def = PLANETS.find((p) => p.name === name);
-    setFlyTarget({ obj, radius: def ? def.radius : SUN.radius });
+    const body = [EARTH, ...PLANETS].find((p) => p.name === name);
+    setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
   };
 
   return (
@@ -103,6 +104,14 @@ function Scene({
         scale={SUN.radius / 7}
         registerTarget={registerTarget}
         onSelect={handleSelect}
+      />
+
+      <Earth
+        body={EARTH}
+        registerTarget={registerTarget}
+        onSelect={handleSelect}
+        selectedName={selectedName}
+        timeScale={timeScale}
       />
 
       {PLANETS.map((p) => (
@@ -136,7 +145,7 @@ function Scene({
 /*  Top-level page component                                              */
 /* -------------------------------------------------------------------- */
 
-const BODY_NAMES = [SUN.name, ...PLANETS.map((p) => p.name)];
+const BODY_NAMES = [SUN.name, EARTH.name, ...PLANETS.map((p) => p.name)];
 
 export default function SolarSystemSimulation() {
   const targetsRef = useRef<Record<string, THREE.Object3D>>({});
@@ -154,8 +163,8 @@ export default function SolarSystemSimulation() {
     const obj = targetsRef.current[name];
     if (!obj) return;
     setSelectedName(name);
-    const def = PLANETS.find((p) => p.name === name);
-    setFlyTarget({ obj, radius: def ? def.radius : SUN.radius });
+    const body = [EARTH, ...PLANETS].find((p) => p.name === name);
+    setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
   };
 
   return (

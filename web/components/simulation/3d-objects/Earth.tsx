@@ -1,24 +1,24 @@
 /* -------------------------------------------------------------------- */
-/*  Planet                                                                 */
+/*  Earth                                                                 */
 /* -------------------------------------------------------------------- */
 
 import * as THREE from "three";
 
 import { Html } from "@react-three/drei";
-import { BodyDef } from "@/lib/simulation/data";
-import React, { useEffect, useRef } from "react";
+import { EarthDef } from "@/lib/simulation/data";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrbitRing } from "./OrbitRing";
 import { useLoader } from "@react-three/fiber";
 
-export const Planet = ({
+export const Earth = ({
   body,
   registerTarget,
   onSelect,
   selectedName,
   timeScale,
 }: {
-  body: BodyDef;
+  body: EarthDef;
   registerTarget: (name: string, obj: THREE.Object3D) => void;
   onSelect: (name: string, obj: THREE.Object3D) => void;
   selectedName: string | null;
@@ -32,9 +32,9 @@ export const Planet = ({
     THREE.TextureLoader,
     body.texture?.day ?? "/textures/default.jpg",
   );
-  const ringMap = body.texture?.ring
+  const nightMap = body.texture.night
     ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useLoader(THREE.TextureLoader, body.texture.ring)
+      useLoader(THREE.TextureLoader, body.texture.night)
     : null;
 
   useFrame((_, delta) => {
@@ -47,49 +47,15 @@ export const Planet = ({
     }
   });
 
-  const ringGeometry = React.useMemo(() => {
-    if (!body.ring) return null;
-
-    const geometry = new THREE.RingGeometry(
-      body.ring.inner,
-      body.ring.outer,
-      128,
-    );
-
-    const pos = geometry.attributes.position;
-    const uv = geometry.attributes.uv;
-
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
-
-      const r = Math.sqrt(x * x + y * y);
-
-      const u = (r - body.ring.inner) / (body.ring.outer - body.ring.inner);
-
-      uv.setXY(i, u, 0.5);
-    }
-
-    uv.needsUpdate = true;
-
-    return geometry;
-  }, [body.ring]);
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
     dayMap.colorSpace = THREE.SRGBColorSpace;
 
-    if (ringMap) {
+    if (nightMap) {
       // eslint-disable-next-line react-hooks/immutability
-      ringMap.colorSpace = THREE.SRGBColorSpace;
-
-      ringMap.wrapS = THREE.ClampToEdgeWrapping;
-      ringMap.wrapT = THREE.ClampToEdgeWrapping;
-
-      ringMap.anisotropy = 16;
-      ringMap.needsUpdate = true;
+      nightMap.colorSpace = THREE.SRGBColorSpace;
     }
-  }, [dayMap, ringMap]);
+  }, [dayMap, nightMap]);
 
   return (
     <group>
@@ -110,27 +76,15 @@ export const Planet = ({
             }}
           >
             <sphereGeometry args={[body.radius, 32, 32]} />
-
             <meshStandardMaterial
               map={dayMap}
-              emissive={body.color}
+              emissiveMap={nightMap}
+              emissive="blue"
               emissiveIntensity={selectedName === body.name ? 1 : 0.5}
               roughness={0.9}
               metalness={0}
             />
           </mesh>
-
-          {body.ring && ringGeometry && (
-            <mesh geometry={ringGeometry} rotation={[Math.PI / 2.1, 0, 0]}>
-              <meshBasicMaterial
-                map={ringMap}
-                transparent
-                alphaTest={0.05}
-                side={THREE.DoubleSide}
-                depthWrite={false}
-              />
-            </mesh>
-          )}
 
           <Html distanceFactor={28} position={[0, body.radius + 0.9, 0]} center>
             <div className="text-sm text-muted-foreground pointer-events-none select-none whitespace-nowrap opacity-80 text-shadow">

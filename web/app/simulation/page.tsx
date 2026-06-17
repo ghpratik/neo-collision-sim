@@ -11,35 +11,66 @@ import { Slider } from "@/components/ui/slider";
 import { SunModel } from "@/components/simulation/3d-objects/Sun";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Scan } from "lucide-react";
 import { Earth } from "@/components/simulation/3d-objects/Earth";
 // import { Sun } from "@/components/simulation/3d-objects/Sun";
 
 /* -------------------------------------------------------------------- */
 /*  Camera rig — flies to / tracks the selected target                    */
 /* -------------------------------------------------------------------- */
+const DEFAULT_CAMERA_POS = new THREE.Vector3(0, 22, 46);
+const DEFAULT_TARGET = new THREE.Vector3(0, 0, 0);
 
 function CameraRig({
   target,
   controlsRef,
+  resetCamera,
+  onResetComplete,
 }: {
   target: { obj: THREE.Object3D; radius: number } | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   controlsRef: React.RefObject<any>;
+  resetCamera: boolean;
+  onResetComplete: () => void;
 }) {
   const desired = useRef(new THREE.Vector3());
   const worldPos = useRef(new THREE.Vector3());
 
   useFrame(({ camera }, delta) => {
-    if (!target || !controlsRef.current) return;
+    if (!controlsRef.current) return;
+
+    // Smooth reset
+    if (resetCamera) {
+      camera.position.lerp(DEFAULT_CAMERA_POS, Math.min(1, delta * 2));
+
+      controlsRef.current.target.lerp(DEFAULT_TARGET, Math.min(1, delta * 2));
+
+      controlsRef.current.update();
+
+      const cameraDone = camera.position.distanceTo(DEFAULT_CAMERA_POS) < 0.1;
+
+      const targetDone =
+        controlsRef.current.target.distanceTo(DEFAULT_TARGET) < 0.1;
+
+      if (cameraDone && targetDone) {
+        camera.position.copy(DEFAULT_CAMERA_POS);
+        controlsRef.current.target.copy(DEFAULT_TARGET);
+        controlsRef.current.update();
+        onResetComplete();
+      }
+
+      return;
+    }
+
+    // Existing planet-follow logic
+    if (!target) return;
 
     target.obj.getWorldPosition(worldPos.current);
 
-    // Smoothly move the orbit-controls focus point to the target.
     controlsRef.current.target.lerp(worldPos.current, Math.min(1, delta * 3));
 
-    // Keep camera at a comfortable distance proportional to body size.
     const offsetDist = Math.max(target.radius * 5, 0.3);
+
     desired.current
       .copy(camera.position)
       .sub(controlsRef.current.target)
@@ -48,6 +79,7 @@ function CameraRig({
       .add(worldPos.current);
 
     camera.position.lerp(desired.current, Math.min(1, delta * 1.8));
+
     controlsRef.current.update();
   });
 
@@ -65,6 +97,8 @@ function Scene({
   goTo,
   controlsRef,
   timeScale,
+  resetCamera,
+  setResetCamera,
 }: {
   targets: React.RefObject<Record<string, THREE.Object3D>>;
   selectedName: string | null;
@@ -73,6 +107,8 @@ function Scene({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   controlsRef: React.RefObject<any>;
   timeScale: number;
+  resetCamera: boolean;
+  setResetCamera: (reset: boolean) => void;
 }) {
   const registerTarget = (name: string, obj: THREE.Object3D) => {
     // eslint-disable-next-line react-hooks/immutability
@@ -117,7 +153,12 @@ function Scene({
         />
       ))}
 
-      <CameraRig target={flyTarget} controlsRef={controlsRef} />
+      <CameraRig
+        target={flyTarget}
+        controlsRef={controlsRef}
+        resetCamera={resetCamera}
+        onResetComplete={() => setResetCamera(false)}
+      />
 
       <OrbitControls
         ref={controlsRef}
@@ -155,18 +196,13 @@ export default function SolarSystemSimulation() {
     radius: number;
   } | null>(null);
   const [timeScale, setTimeScale] = useState(10);
+  const [resetCamera, setResetCamera] = useState(false);
 
   const goTo = (name: string) => {
     const obj = targetsRef.current[name];
     if (!obj) return;
     setSelectedName(name);
     const body = [EARTH, MOON, ...PLANETS].find((p) => p.name === name);
-    console.log(
-      "Flying to",
-      name,
-      "with radius",
-      body ? body.radius : SUN.radius,
-    );
     setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
   };
 
@@ -190,6 +226,8 @@ export default function SolarSystemSimulation() {
             goTo={goTo}
             controlsRef={controlsRef}
             timeScale={timeScale}
+            resetCamera={resetCamera}
+            setResetCamera={setResetCamera}
           />
         </Suspense>
       </Canvas>
@@ -214,25 +252,42 @@ export default function SolarSystemSimulation() {
         />
       </div>
 
-      {/* Time scale control */}
-      <div className="w-full max-w-sm lg:max-w-md absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
-        <span className="text-xs font-medium text-muted-foreground">Speed</span>
-        <Slider
-          defaultValue={[10]}
-          max={100}
-          step={0.1}
-          className="mx-auto"
-          onValueChange={(value) => setTimeScale(value[0])}
-          value={[timeScale]}
-        />
-        <span className="text-xs font-medium text-muted-foreground text-nowrap">
-          {timeScale.toFixed(1)} days/sec
-        </span>
-      </div>
+      {/* Bottom Control Panel */}
+      <div className="w-full absolute bottom-0 left-0 z-10 flex items-center justify-between gap-2 px-4 pb-2 text-xs font-medium text-muted-foreground">
+        {/* Time scale control */}
+        <div className="w-full max-w-sm lg:max-w-md flex items-center gap-2 bg-card/30 backdrop-blur-sm px-3 py-1.5 rounded">
+          <span>Speed</span>
+          <Slider
+            defaultValue={[10]}
+            max={100}
+            step={0.1}
+            className="mx-auto"
+            onValueChange={(value) => setTimeScale(value[0])}
+            value={[timeScale]}
+          />
+          <span className="text-xs font-medium text-muted-foreground text-nowrap">
+            {timeScale.toFixed(1)} days/sec
+          </span>
+        </div>
 
-      {/* Hint */}
-      <div className="absolute hidden md:block z-10 bottom-4 right-4 opacity-90 text-xs text-muted-foreground">
-        Drag to rotate · scroll to zoom · click a body to focus
+        {/* Reset Camera Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="bg-card/30 backdrop-blur-sm"
+          onClick={() => {
+            setSelectedName(null);
+            setFlyTarget(null);
+            setResetCamera(true);
+          }}
+        >
+          <Scan className="h-4 w-4" />
+        </Button>
+
+        {/* Hint */}
+        <div className="hidden md:block">
+          Drag to rotate · scroll to zoom · click a body to focus
+        </div>
       </div>
     </div>
   );

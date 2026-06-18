@@ -11,7 +11,7 @@ import Link from "next/link";
 import { ArrowLeft, Scan } from "lucide-react";
 import Scene from "@/components/simulation/Scene";
 import AsteroidsSheet from "@/components/simulation/controls/AsteroidsSheet";
-import { AsteroidProvider } from "@/contexts/AsteroidContext";
+import { useAsteroids } from "@/contexts/AsteroidContext";
 
 const BODY_NAMES = [
   SUN.name,
@@ -32,6 +32,7 @@ export default function SolarSystemSimulation() {
   } | null>(null);
   const [timeScale, setTimeScale] = useState(10);
   const [resetCamera, setResetCamera] = useState(false);
+  const { selectAsteroid } = useAsteroids();
 
   const goTo = (name: string) => {
     const obj = targetsRef.current[name];
@@ -42,97 +43,96 @@ export default function SolarSystemSimulation() {
   };
 
   return (
-    <AsteroidProvider>
-      <div className="relative w-screen h-screen overflow-hidden">
-        <Canvas
-          camera={{ position: [0, 22, 46], fov: 50, near: 0.1, far: 2000 }}
-          gl={{
-            antialias: true,
-            toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.2,
-          }}
-          dpr={[1, 2]}
-          style={{ width: "100%", height: "100%", display: "block" }}
+    <div className="relative w-screen h-screen overflow-hidden">
+      <Canvas
+        camera={{ position: [0, 22, 46], fov: 50, near: 0.1, far: 2000 }}
+        gl={{
+          antialias: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.2,
+        }}
+        dpr={[1, 2]}
+        style={{ width: "100%", height: "100%", display: "block" }}
+      >
+        <Suspense fallback={null}>
+          <Scene
+            targets={targetsRef}
+            selectedName={selectedName}
+            flyTarget={flyTarget}
+            goTo={goTo}
+            controlsRef={controlsRef}
+            timeScale={timeScale}
+            resetCamera={resetCamera}
+            setResetCamera={setResetCamera}
+          />
+        </Suspense>
+      </Canvas>
+
+      {/* Top Control Panel */}
+      <div className="w-full absolute top-0 left-0 flex items-center justify-between gap-2 px-4 pt-3">
+        {/* Go Home Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-background/30 backdrop-blur-sm z-10"
+          asChild
         >
-          <Suspense fallback={null}>
-            <Scene
-              targets={targetsRef}
-              selectedName={selectedName}
-              flyTarget={flyTarget}
-              goTo={goTo}
-              controlsRef={controlsRef}
-              timeScale={timeScale}
-              resetCamera={resetCamera}
-              setResetCamera={setResetCamera}
-            />
-          </Suspense>
-        </Canvas>
+          <Link href="/">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Go Home
+          </Link>
+        </Button>
 
-        {/* Top Control Panel */}
-        <div className="w-full absolute top-0 left-0 flex items-center justify-between gap-2 px-4 pt-3">
-          {/* Go Home Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-background/30 backdrop-blur-sm z-10"
-            asChild
-          >
-            <Link href="/">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Go Home
-            </Link>
-          </Button>
+        {/* Asteroid Body Selection */}
+        <AsteroidsSheet />
 
-          {/* Asteroid Body Selection */}
-          <AsteroidsSheet />
-
-          {/* Body Navigation panel */}
-          <div className="max-w-[92vw] flex items-center z-10">
-            <SelectPlanet
-              bodies={BODY_NAMES}
-              selectedName={selectedName}
-              onSelect={(value) => goTo(value)}
-            />
-          </div>
-        </div>
-
-        {/* Bottom Control Panel */}
-        <div className="w-full absolute bottom-0 left-0 flex items-center justify-between gap-2 px-4 pb-2 text-xs font-medium text-muted-foreground">
-          {/* Time scale control */}
-          <div className="w-full max-w-sm lg:max-w-md flex items-center gap-2 bg-card/30 backdrop-blur-sm px-3 py-1.5 rounded z-10">
-            <span>Speed</span>
-            <Slider
-              defaultValue={[10]}
-              max={100}
-              step={0.1}
-              className="mx-auto"
-              onValueChange={(value) => setTimeScale(value[0])}
-              value={[timeScale]}
-            />
-            <span className="text-xs font-medium text-muted-foreground text-nowrap">
-              {timeScale.toFixed(1)} days/sec
-            </span>
-          </div>
-
-          {/* Reset Camera Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="bg-card/30 backdrop-blur-sm z-10"
-            onClick={() => {
-              setSelectedName(null);
-              setFlyTarget(null);
-              setResetCamera(true);
-            }}
-          >
-            <Scan className="h-4 w-4" />
-          </Button>
-
-          {/* Hint */}
-          <div className="hidden md:block z-10">
-            Drag to rotate · scroll to zoom · click a body to focus
-          </div>
+        {/* Body Navigation panel */}
+        <div className="max-w-[92vw] flex items-center z-10">
+          <SelectPlanet
+            bodies={BODY_NAMES}
+            selectedName={selectedName}
+            onSelect={(value) => goTo(value)}
+          />
         </div>
       </div>
-    </AsteroidProvider>
+
+      {/* Bottom Control Panel */}
+      <div className="w-full absolute bottom-0 left-0 flex items-center justify-between gap-2 px-4 pb-2 text-xs font-medium text-muted-foreground">
+        {/* Time scale control */}
+        <div className="w-full max-w-sm lg:max-w-md flex items-center gap-2 bg-card/30 backdrop-blur-sm px-3 py-1.5 rounded z-10">
+          <span>Speed</span>
+          <Slider
+            defaultValue={[10]}
+            max={100}
+            step={0.1}
+            className="mx-auto"
+            onValueChange={(value) => setTimeScale(value[0])}
+            value={[timeScale]}
+          />
+          <span className="text-xs font-medium text-muted-foreground text-nowrap">
+            {timeScale.toFixed(1)} days/sec
+          </span>
+        </div>
+
+        {/* Reset Camera Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="bg-card/30 backdrop-blur-sm z-10"
+          onClick={() => {
+            setSelectedName(null);
+            setFlyTarget(null);
+            setResetCamera(true);
+            selectAsteroid(null);
+          }}
+        >
+          <Scan className="h-4 w-4" />
+        </Button>
+
+        {/* Hint */}
+        <div className="hidden md:block z-10">
+          Drag to rotate · scroll to zoom · click a body to focus
+        </div>
+      </div>
+    </div>
   );
 }

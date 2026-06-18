@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { OrbitRing } from "./OrbitRing";
 import { EarthDef } from "@/lib/simulation/data";
 import * as THREE from "three";
-import BodyLabel from "../BodyLabel";
+import BodyLabel from "../controls/BodyLabel";
 
 type MoonProps = {
   body: EarthDef;

@@ -9,7 +9,7 @@ import React, { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrbitRing } from "./OrbitRing";
 import { useLoader } from "@react-three/fiber";
-import BodyLabel from "../BodyLabel";
+import BodyLabel from "../controls/BodyLabel";
 
 export const Planet = ({
   body,

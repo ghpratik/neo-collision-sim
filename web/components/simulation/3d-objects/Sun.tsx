@@ -4,7 +4,7 @@ import { useLoader, useFrame } from "@react-three/fiber";
 import { SUN } from "@/lib/simulation/data";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function SunModel({ registerTarget, onSelect, ...props }: any) {
+export function Sun({ registerTarget, onSelect, ...props }: any) {
   const group = React.useRef<THREE.Group>(null!);
   const meshRef = React.useRef<THREE.Mesh>(null!);
 

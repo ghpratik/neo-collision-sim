@@ -146,20 +146,19 @@ export default function SolarSystemSimulation() {
           <span className="text-xs font-medium text-muted-foreground text-nowrap">
             {timeScale.toFixed(1)} days/sec
           </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-card/30 backdrop-blur-sm z-10"
+            onClick={() => {
+              setSelectedName(null);
+              setFlyTarget(null);
+              setResetCamera(true);
+            }}
+          >
+            <Scan className="h-4 w-4" />
+          </Button>
         </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="bg-card/30 backdrop-blur-sm z-10"
-          onClick={() => {
-            setSelectedName(null);
-            setFlyTarget(null);
-            setResetCamera(true);
-          }}
-        >
-          <Scan className="h-4 w-4" />
-        </Button>
 
         <div className="hidden md:block z-10">
           Drag to rotate · scroll to zoom · click a body to focus

@@ -110,17 +110,17 @@ export default function SolarSystemSimulation() {
             <ArrowLeft className="h-4 w-4 mr-1" /> Go Home
           </Link>
         </Button>
-
-        <AsteroidsSheet />
-        {/* Button which displays the current asteroid name and clear button to deselect it */}
-        {selectedAsteroid && (
-          <AsteroidControls
-            name={selectedAsteroid.name}
-            setFlyTarget={setFlyTarget}
-            selectAsteroid={selectAsteroid}
-            setResetCamera={setResetCamera}
-          />
-        )}
+        <div className="flex items-center gap-2 z-10">
+          <AsteroidsSheet />
+          {/* Button which displays the current asteroid name and clear button to deselect it */}
+          {selectedAsteroid && (
+            <AsteroidControls
+              selectedAsteroid={selectedAsteroid}
+              setFlyTarget={setFlyTarget}
+              setResetCamera={setResetCamera}
+            />
+          )}
+        </div>
 
         <div className="max-w-[92vw] flex items-center z-10">
           <SelectPlanet

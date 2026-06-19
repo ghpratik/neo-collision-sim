@@ -4,14 +4,10 @@ import { useFrame } from "@react-three/fiber";
 import { Line } from "@react-three/drei";
 import * as THREE from "three";
 import type { AsteroidBody } from "@/contexts/AsteroidContext";
+import BodyLabel from "../controls/BodyLabel";
 
-// ⚠️ Match this to whatever AU->scene-units factor your Earth/Planet
-// components use, so the asteroid lines up with the rest of the solar system.
 const AU_SCALE = 10;
-
-// How many of the 730 sampled frames to advance per second at timeScale = 1.
-// Higher = faster playback through the precomputed trajectory.
-const FRAMES_PER_SECOND = 1;
+const FRAMES_PER_SECOND = 4;
 
 interface AsteroidProps {
   id: string;
@@ -20,11 +16,9 @@ interface AsteroidProps {
   selectedName: string | null;
   registerTarget: (name: string, obj: THREE.Object3D) => void;
   onSelect: (name: string) => void;
+  onMount: (obj: THREE.Object3D, radius: number) => void; // ← new
 }
 
-// Converts heliocentric-ecliptic (x right, y in-plane, z = north/up out of
-// ecliptic) into three.js's y-up convention. Flip signs here if your
-// Earth/Planet components use a different handedness.
 function eclipticToThree(
   x: number,
   y: number,
@@ -40,38 +34,40 @@ export const Asteroid: React.FC<AsteroidProps> = ({
   selectedName,
   registerTarget,
   onSelect,
+  onMount,
 }) => {
   const meshRef = useRef<THREE.Mesh>(null!);
   const elapsed = useRef(0);
 
   const points = useMemo(() => {
     const { x, y, z } = body.positions;
-    const pts: THREE.Vector3[] = [];
-    for (let i = 0; i < x.length; i++) {
-      const [px, py, pz] = eclipticToThree(x[i], y[i], z[i]);
-      pts.push(new THREE.Vector3(px, py, pz));
-    }
-    return pts;
+    return x.map(
+      (_, i) => new THREE.Vector3(...eclipticToThree(x[i], y[i], z[i])),
+    );
   }, [body.positions]);
 
   const totalFrames = points.length;
 
+  // Initial position so the mesh doesn't sit at origin before the first frame
+  const initialPos = points[0] ?? new THREE.Vector3();
+
   useEffect(() => {
-    if (meshRef.current) registerTarget(id, meshRef.current);
-  }, [id, registerTarget]);
+    if (!meshRef.current) return;
+    registerTarget(id, meshRef.current);
+    const radius = Math.max((body.diameter_km ?? 1) / 1000, 0.4);
+    onMount(meshRef.current, radius); // ← fire after mesh is in targets
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]); // intentionally only on mount
 
   useFrame((_, delta) => {
     if (!meshRef.current || totalFrames < 2) return;
-
     elapsed.current += delta * timeScale * FRAMES_PER_SECOND;
     const t = ((elapsed.current % totalFrames) + totalFrames) % totalFrames;
     const i0 = Math.floor(t);
     const i1 = (i0 + 1) % totalFrames;
     const frac = t - i0;
-
     const p0 = points[i0];
     const p1 = points[i1];
-
     meshRef.current.position.set(
       THREE.MathUtils.lerp(p0.x, p1.x, frac),
       THREE.MathUtils.lerp(p0.y, p1.y, frac),
@@ -84,7 +80,6 @@ export const Asteroid: React.FC<AsteroidProps> = ({
 
   return (
     <group>
-      {/* Trajectory path computed from the precomputed positions */}
       <Line
         points={points}
         color={body.color}
@@ -92,10 +87,9 @@ export const Asteroid: React.FC<AsteroidProps> = ({
         transparent
         opacity={0.45}
       />
-
-      {/* The moving asteroid marker */}
       <mesh
         ref={meshRef}
+        position={[initialPos.x, initialPos.y, initialPos.z]}
         onClick={(e) => {
           e.stopPropagation();
           onSelect(id);
@@ -107,6 +101,7 @@ export const Asteroid: React.FC<AsteroidProps> = ({
           emissive={isSelected ? body.color : "#000000"}
           emissiveIntensity={isSelected ? 1.2 : 0}
         />
+        <BodyLabel name={body.name} radius={radius} />
       </mesh>
     </group>
   );

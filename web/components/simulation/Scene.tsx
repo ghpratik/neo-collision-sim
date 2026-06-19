@@ -1,7 +1,6 @@
 "use client";
 import { OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
-import { useEffect } from "react";
 import { Sun } from "./3d-objects/Sun";
 import { Earth } from "./3d-objects/Earth";
 import { Asteroid } from "./3d-objects/Asteroid";
@@ -20,6 +19,7 @@ interface SceneProps {
   timeScale: number;
   resetCamera: boolean;
   setResetCamera: (reset: boolean) => void;
+  onAsteroidMount: (obj: THREE.Object3D, radius: number) => void; // ← new
 }
 
 const Scene: React.FC<SceneProps> = ({
@@ -31,6 +31,7 @@ const Scene: React.FC<SceneProps> = ({
   timeScale,
   resetCamera,
   setResetCamera,
+  onAsteroidMount,
 }) => {
   const { selectedAsteroidId, selectedAsteroid } = useAsteroids();
 
@@ -38,13 +39,6 @@ const Scene: React.FC<SceneProps> = ({
     // eslint-disable-next-line react-hooks/immutability
     if (targets.current) targets.current[name] = obj;
   };
-
-  // Fly the camera to the asteroid as soon as it's selected & registered
-  useEffect(() => {
-    if (selectedAsteroidId) {
-      goTo(selectedAsteroidId);
-    }
-  }, [selectedAsteroidId, goTo]);
 
   return (
     <>
@@ -80,6 +74,7 @@ const Scene: React.FC<SceneProps> = ({
           selectedName={selectedName}
           registerTarget={registerTarget}
           onSelect={goTo}
+          onMount={onAsteroidMount} // ← pass through
         />
       )}
 

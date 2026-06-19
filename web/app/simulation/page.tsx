@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { SelectPlanet } from "@/components/simulation/controls/SelectPlanetDropdown";
@@ -32,14 +32,42 @@ export default function SolarSystemSimulation() {
   } | null>(null);
   const [timeScale, setTimeScale] = useState(10);
   const [resetCamera, setResetCamera] = useState(false);
-  const { selectAsteroid } = useAsteroids();
+
+  const { selectAsteroid, selectedAsteroid, selectedAsteroidId } =
+    useAsteroids();
+
+  // Clear the planet dropdown whenever an asteroid is focused
+  useEffect(() => {
+    if (selectedAsteroidId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedName(null);
+    }
+  }, [selectedAsteroidId]);
 
   const goTo = (name: string) => {
-    const obj = targetsRef.current[name];
-    if (!obj) return;
-    setSelectedName(name);
-    const body = [EARTH, MOON, ...PLANETS].find((p) => p.name === name);
-    setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
+    if (BODY_NAMES.includes(name)) {
+      // ── Known solar body ──────────────────────────────────────────
+      const obj = targetsRef.current[name];
+      if (!obj) return;
+      setSelectedName(name);
+      // selectAsteroid(null); // deselect any asteroid
+      const body = [EARTH, MOON, ...PLANETS].find((p) => p.name === name);
+      setFlyTarget({ obj, radius: body ? body.radius : SUN.radius });
+    } else {
+      // ── Asteroid clicked directly in the 3‑D scene ───────────────
+      // (only reachable when the Asteroid mesh is already mounted)
+      const obj = targetsRef.current[name];
+      if (!obj) return;
+      const radius = selectedAsteroid
+        ? Math.max((selectedAsteroid.diameter_km ?? 1) / 1000, 0.4)
+        : 0.4;
+      setFlyTarget({ obj, radius });
+    }
+  };
+
+  // Called by <Asteroid> right after its mesh mounts & registers itself
+  const handleAsteroidMount = (obj: THREE.Object3D, radius: number) => {
+    setFlyTarget({ obj, radius });
   };
 
   return (
@@ -64,13 +92,13 @@ export default function SolarSystemSimulation() {
             timeScale={timeScale}
             resetCamera={resetCamera}
             setResetCamera={setResetCamera}
+            onAsteroidMount={handleAsteroidMount}
           />
         </Suspense>
       </Canvas>
 
       {/* Top Control Panel */}
       <div className="w-full absolute top-0 left-0 flex items-center justify-between gap-2 px-4 pt-3">
-        {/* Go Home Button */}
         <Button
           variant="outline"
           size="sm"
@@ -82,10 +110,8 @@ export default function SolarSystemSimulation() {
           </Link>
         </Button>
 
-        {/* Asteroid Body Selection */}
         <AsteroidsSheet />
 
-        {/* Body Navigation panel */}
         <div className="max-w-[92vw] flex items-center z-10">
           <SelectPlanet
             bodies={BODY_NAMES}
@@ -97,7 +123,6 @@ export default function SolarSystemSimulation() {
 
       {/* Bottom Control Panel */}
       <div className="w-full absolute bottom-0 left-0 flex items-center justify-between gap-2 px-4 pb-2 text-xs font-medium text-muted-foreground">
-        {/* Time scale control */}
         <div className="w-full max-w-sm lg:max-w-md flex items-center gap-2 bg-card/30 backdrop-blur-sm px-3 py-1.5 rounded z-10">
           <span>Speed</span>
           <Slider
@@ -113,7 +138,6 @@ export default function SolarSystemSimulation() {
           </span>
         </div>
 
-        {/* Reset Camera Button */}
         <Button
           variant="ghost"
           size="icon"
@@ -122,13 +146,12 @@ export default function SolarSystemSimulation() {
             setSelectedName(null);
             setFlyTarget(null);
             setResetCamera(true);
-            selectAsteroid(null);
+            selectAsteroid(null); // ← clear asteroid too
           }}
         >
           <Scan className="h-4 w-4" />
         </Button>
 
-        {/* Hint */}
         <div className="hidden md:block z-10">
           Drag to rotate · scroll to zoom · click a body to focus
         </div>

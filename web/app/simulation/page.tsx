@@ -8,10 +8,11 @@ import { EARTH, MOON, PLANETS, SUN } from "@/lib/simulation/data";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft, Scan } from "lucide-react";
+import { ArrowLeft, Scan, X } from "lucide-react";
 import Scene from "@/components/simulation/Scene";
 import AsteroidsSheet from "@/components/simulation/controls/AsteroidsSheet";
 import { useAsteroids } from "@/contexts/AsteroidContext";
+import AsteroidControls from "@/components/simulation/controls/AsteroidControls";
 
 const BODY_NAMES = [
   SUN.name,
@@ -111,6 +112,15 @@ export default function SolarSystemSimulation() {
         </Button>
 
         <AsteroidsSheet />
+        {/* Button which displays the current asteroid name and clear button to deselect it */}
+        {selectedAsteroid && (
+          <AsteroidControls
+            name={selectedAsteroid.name}
+            setFlyTarget={setFlyTarget}
+            selectAsteroid={selectAsteroid}
+            setResetCamera={setResetCamera}
+          />
+        )}
 
         <div className="max-w-[92vw] flex items-center z-10">
           <SelectPlanet
@@ -146,7 +156,6 @@ export default function SolarSystemSimulation() {
             setSelectedName(null);
             setFlyTarget(null);
             setResetCamera(true);
-            selectAsteroid(null); // ← clear asteroid too
           }}
         >
           <Scan className="h-4 w-4" />

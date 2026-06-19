@@ -7,7 +7,9 @@ import type { AsteroidDetail } from "@/contexts/AsteroidContext";
 import BodyLabel from "../controls/BodyLabel";
 
 const AU_SCALE = 14.96;
-const FRAMES_PER_SECOND = 4;
+const FRAMES_PER_SECOND = 1;
+
+const TIME_SLOW_DOWN = 0.3;
 
 interface AsteroidProps {
   id: string;
@@ -61,7 +63,7 @@ export const Asteroid: React.FC<AsteroidProps> = ({
 
   useFrame((_, delta) => {
     if (!meshRef.current || totalFrames < 2) return;
-    elapsed.current += delta * timeScale * FRAMES_PER_SECOND;
+    elapsed.current += delta * timeScale * FRAMES_PER_SECOND * TIME_SLOW_DOWN; // slow down time for better visualization
     const t = ((elapsed.current % totalFrames) + totalFrames) % totalFrames;
     const i0 = Math.floor(t);
     const i1 = (i0 + 1) % totalFrames;

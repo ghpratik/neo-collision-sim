@@ -35,7 +35,7 @@ export const EARTH: EarthDef = {
   name: "Earth",
   color: "#3D7FD9",
   radius: 0.55,
-  distance: 14,
+  distance: 14.96,
   speed: 1,
   texture: {
     day: "/textures/earth_daymap.jpg",
@@ -80,7 +80,7 @@ export const PLANETS: BodyDef[] = [
     name: "Mars",
     color: "#1c0c06",
     radius: 0.42,
-    distance: 18,
+    distance: 20,
     speed: 0.5312,
     texture: {
       day: "/textures/mars.jpg",
@@ -90,7 +90,7 @@ export const PLANETS: BodyDef[] = [
     name: "Jupiter",
     color: "#1f150b",
     radius: 1.7,
-    distance: 26,
+    distance: 28,
     speed: 0.08431,
     texture: {
       day: "/textures/jupiter.jpg",
@@ -100,7 +100,7 @@ export const PLANETS: BodyDef[] = [
     name: "Saturn",
     color: "#1f1a0f",
     radius: 1.45,
-    distance: 34,
+    distance: 36,
     speed: 0.0339,
     ring: { inner: 1.9, outer: 3.0, color: "#C9B58A" },
     texture: {
@@ -112,7 +112,7 @@ export const PLANETS: BodyDef[] = [
     name: "Uranus",
     color: "#151f21",
     radius: 1.0,
-    distance: 41,
+    distance: 45,
     speed: 0.0118,
     texture: {
       day: "/textures/uranus.jpg",
@@ -122,7 +122,7 @@ export const PLANETS: BodyDef[] = [
     name: "Neptune",
     color: "#0c1224",
     radius: 0.97,
-    distance: 48,
+    distance: 53,
     speed: 0.0061,
     texture: {
       day: "/textures/neptune.jpg",

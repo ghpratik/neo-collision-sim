@@ -10,7 +10,7 @@ import { useFrame } from "@react-three/fiber";
 import { OrbitRing } from "./OrbitRing";
 import { useLoader } from "@react-three/fiber";
 import { Moon } from "./Moon";
-import BodyLabel from "../BodyLabel";
+import BodyLabel from "../controls/BodyLabel";
 
 export const Earth = ({
   body,

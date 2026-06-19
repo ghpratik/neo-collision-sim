@@ -1,4 +1,5 @@
 import { team } from "@/lib/team";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function TeamSection() {
   return (
@@ -24,7 +25,13 @@ export function TeamSection() {
             >
               <div className="absolute -top-12 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full bg-primary/20 blur-2xl transition-opacity group-hover:opacity-100 opacity-50" />
               <div className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-heading text-xl font-bold text-primary">
-                {member.initials}
+                {/* {member.initials} */}
+
+                <Avatar className="h-full w-full rounded-full border-2 border-primary/50 bg-primary/10">
+                  <AvatarImage src={member.profilePic} alt={member.name} />
+                  <AvatarFallback>{member.initials}</AvatarFallback>
+                  {/* <AvatarBadge className="bg-green-600 dark:bg-green-800" /> */}
+                </Avatar>
               </div>
               <h3 className="mt-5 font-heading text-lg font-semibold">
                 {member.name}

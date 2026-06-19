@@ -6,7 +6,7 @@ import * as THREE from "three";
 import type { AsteroidBody } from "@/contexts/AsteroidContext";
 import BodyLabel from "../controls/BodyLabel";
 
-const AU_SCALE = 10;
+const AU_SCALE = 14.96;
 const FRAMES_PER_SECOND = 4;
 
 interface AsteroidProps {

@@ -7,26 +7,27 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useAsteroids, type AsteroidBody } from "@/contexts/AsteroidContext";
+import { useAsteroids, type AsteroidDetail } from "@/contexts/AsteroidContext";
 import { X, Orbit, AlertTriangle, Ruler, Palette } from "lucide-react";
 import * as THREE from "three";
 
 interface AsteroidControlsProps {
-  selectedAsteroid: AsteroidBody | null;
+  selectedAsteroid: AsteroidDetail | null;
   setFlyTarget: (
     target: { obj: THREE.Object3D; radius: number } | null,
   ) => void;
   setResetCamera: (reset: boolean) => void;
 }
 
-const ORBITAL_LABELS: Record<keyof AsteroidBody["orbital_elements"], string> = {
-  a_au: "Semi-major axis",
-  e: "Eccentricity",
-  i_deg: "Inclination",
-  Omega_deg: "Long. asc. node",
-  omega_deg: "Arg. perihelion",
-  epoch_jd: "Epoch (JD)",
-};
+const ORBITAL_LABELS: Record<keyof AsteroidDetail["orbital_elements"], string> =
+  {
+    a_au: "Semi-major axis",
+    e: "Eccentricity",
+    i_deg: "Inclination",
+    Omega_deg: "Long. asc. node",
+    omega_deg: "Arg. perihelion",
+    epoch_jd: "Epoch (JD)",
+  };
 
 export function AsteroidControls({
   selectedAsteroid,

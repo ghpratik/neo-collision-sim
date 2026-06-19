@@ -3,7 +3,7 @@ import { useMemo, useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Line } from "@react-three/drei";
 import * as THREE from "three";
-import type { AsteroidBody } from "@/contexts/AsteroidContext";
+import type { AsteroidDetail } from "@/contexts/AsteroidContext";
 import BodyLabel from "../controls/BodyLabel";
 
 const AU_SCALE = 14.96;
@@ -11,7 +11,7 @@ const FRAMES_PER_SECOND = 4;
 
 interface AsteroidProps {
   id: string;
-  body: AsteroidBody;
+  body: AsteroidDetail;
   timeScale: number;
   selectedName: string | null;
   registerTarget: (name: string, obj: THREE.Object3D) => void;

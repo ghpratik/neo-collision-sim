@@ -126,5 +126,3 @@ npm install three @react-three/fiber @react-three/drei \
 ```
 
 The cleanest data handoff is Python writing `public/data/neos.json` (list of NEOs with metadata + risk score) and `public/data/trajectories/{id}.json` (time-stamped 3D point arrays). Next.js fetches these statically — no backend needed unless you want live propagation on demand.
-
-Want me to scaffold any specific part — the orbital propagation notebook, the R3F solar system component, or the Monte Carlo simulation?

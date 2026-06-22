@@ -1,14 +1,114 @@
-This is a great project idea — NEO (Near-Earth Object) collision forecasting with orbital mechanics simulation! Let me lay out a comprehensive architecture for both the Python forecasting backend and the Next.js 3D frontend.Here's a comprehensive breakdown of the full project — Python forecasting pipeline and Next.js 3D visualization frontend.---
+# 🚀 NEO Collision Forecasting & Orbital Simulation
 
-## Project structure
+A scientific visualization and forecasting platform for analyzing **Near-Earth Objects (NEOs)**, predicting close approaches, estimating impact probabilities, and visualizing orbital trajectories in a real-time 3D solar system.
 
+The project combines **orbital mechanics**, **Monte Carlo uncertainty propagation**, **machine learning forecasting**, and **interactive 3D visualization** to provide an end-to-end workflow for studying potentially hazardous asteroids.
+
+---
+
+## ✨ Features
+
+### Orbital Mechanics
+
+- Fetch real NEO orbital data from NASA databases
+- Propagate asteroid trajectories using Keplerian dynamics
+- Model orbital perturbations:
+  - J2 gravitational effects
+  - Solar radiation pressure
+  - Yarkovsky effect
+
+- Calculate Minimum Orbit Intersection Distance (MOID)
+
+### Uncertainty Analysis
+
+- Monte Carlo orbit propagation
+- Covariance-based trajectory sampling
+- Probability distribution of future close approaches
+- Impact corridor and uncertainty cone generation
+
+### Machine Learning Forecasting
+
+- Miss-distance prediction
+- Long-term orbital trend forecasting
+- Impact probability estimation
+- Risk classification using engineered orbital features
+
+### Risk Assessment
+
+- Palermo Scale calculation
+- Torino Scale calculation
+- Custom risk scoring model
+- Hazard ranking and visualization
+
+### Interactive 3D Visualization
+
+- Real-time solar system rendering
+- Animated planetary orbits
+- NEO trajectory visualization
+- Timeline-based simulation playback
+- Risk heatmap visualization
+- Detailed asteroid inspection panel
+
+---
+
+# 🏗 Architecture
+
+```text
+┌─────────────────────────────┐
+│      NASA Data Sources      │
+│  SBDB • Horizons • CNEOS    │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│      Data Processing        │
+│ Cleaning • Validation       │
+│ Feature Engineering         │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│   Orbital Propagation       │
+│ Poliastro • Astropy         │
+│ Perturbation Models         │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│ Monte Carlo Simulations     │
+│ Orbit Uncertainty Analysis  │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│  ML Forecasting Models      │
+│ LSTM • Prophet • XGBoost    │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│ JSON Export Layer           │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│ Next.js Visualization App   │
+│ React Three Fiber + Charts  │
+└─────────────────────────────┘
 ```
+
+---
+
+# 📂 Project Structure
+
+```text
 neo-forecasting/
+│
 ├── python/
 │   ├── data/
-│   │   ├── raw/                    # Downloaded CSVs, JSON from APIs
-│   │   ├── processed/              # Cleaned parquet files
-│   │   └── exports/                # JSON snapshots for Next.js
+│   │   ├── raw/
+│   │   ├── processed/
+│   │   └── exports/
 │   │
 │   ├── notebooks/
 │   │   ├── 01_data_ingestion.ipynb
@@ -18,111 +118,211 @@ neo-forecasting/
 │   │   ├── 05_ml_forecasting.ipynb
 │   │   └── 06_risk_scoring.ipynb
 │   │
-│   ├── src/
-│   │   ├── data/
-│   │   │   ├── fetch_jpl.py        # NASA Horizons + SBDB API client
-│   │   │   ├── fetch_cneos.py      # Close-approach data
-│   │   │   └── preprocess.py       # Clean, normalize, type units
-│   │   │
-│   │   ├── orbital/
-│   │   │   ├── propagator.py       # Poliastro orbit propagation
-│   │   │   ├── perturbations.py    # J2, solar pressure, Yarkovsky
-│   │   │   └── moid.py             # Minimum orbit intersection distance
-│   │   │
-│   │   ├── simulation/
-│   │   │   ├── monte_carlo.py      # N-body uncertainty sampling
-│   │   │   └── nbody.py            # Rebound / scipy integrators
-│   │   │
-│   │   ├── models/
-│   │   │   ├── lstm_forecast.py    # PyTorch LSTM on trajectory sequences
-│   │   │   ├── prophet_model.py    # Facebook Prophet for miss-distance series
-│   │   │   └── risk_classifier.py  # XGBoost Torino/Palermo score predictor
-│   │   │
-│   │   ├── export/
-│   │   │   └── to_json.py          # Serialize trajectories → Next.js consumable JSON
-│   │   │
-│   │   └── api/
-│   │       └── server.py           # FastAPI (optional live backend)
-│   │
-│   ├── requirements.txt
-│   └── README.md
+│   └── src/
+│       ├── data/
+│       ├── orbital/
+│       ├── simulation/
+│       ├── models/
+│       ├── export/
+│       └── api/
 │
-└── web/                            # Next.js app
+└── web/
     ├── app/
-    │   ├── page.tsx                # Landing / solar system view
-    │   ├── neo/[id]/page.tsx       # Individual NEO detail + forecast
-    │   └── layout.tsx
-    │
     ├── components/
-    │   ├── 3d/
-    │   │   ├── SolarSystem.tsx     # R3F Canvas root
-    │   │   ├── Planet.tsx          # Sphere + orbit ring
-    │   │   ├── NEOTrajectory.tsx   # TubeGeometry path + glow
-    │   │   ├── ImpactMarker.tsx    # Pulsing sphere at close approach
-    │   │   └── CameraController.tsx
-    │   │
-    │   ├── ui/
-    │   │   ├── TimelineScrubber.tsx
-    │   │   ├── RiskPanel.tsx
-    │   │   ├── NEOListSidebar.tsx
-    │   │   └── ForecastChart.tsx   # Recharts miss-distance over time
-    │   │
-    │   └── providers/
-    │       └── SceneStore.tsx      # Zustand global state
-    │
     ├── lib/
-    │   ├── neo-data.ts             # Fetch + parse JSON exports
-    │   └── orbital-utils.ts        # Keppler → Cartesian helpers in TS
-    │
-    ├── public/data/                # Static JSON snapshots from Python
-    └── package.json
+    └── public/data/
 ```
 
 ---
 
-## Approach — phase by phase
+# 🔬 Data Sources
 
-**Phase 1 — Data & orbital mechanics (notebooks 01–03)**
+The project uses publicly available datasets and APIs from NASA and related astronomical services.
 
-Start with the NASA SBDB (Small-Body Database) REST API and the CNEOS close-approach data tables. Use `astroquery` to pull orbital elements (semi-major axis, eccentricity, inclination, etc.) for a target set of NEOs. Then use `poliastro` to propagate those orbits forward in time under Keplerian dynamics, then layer in perturbations (J2 oblateness, solar radiation pressure, Yarkovsky effect for smaller bodies). The output of each propagation is a time-stamped (x, y, z) trajectory in the heliocentric frame.
+| Source                  | Purpose                                |
+| ----------------------- | -------------------------------------- |
+| NASA SBDB               | Orbital elements and asteroid metadata |
+| NASA CNEOS              | Close approach records                 |
+| NASA Horizons           | High-precision ephemerides             |
+| JPL Small-Body Database | Object characteristics                 |
 
-**Phase 2 — Monte Carlo uncertainty (notebook 04)**
+---
 
-Real orbital elements come with covariance matrices. Sample N clones of each NEO's initial state from that distribution and propagate all of them — this gives you an uncertainty cone that widens over time. The `rebound` library is excellent for fast N-body integration here. Your Monte Carlo output is the key scientific product: a probability distribution over miss distances at each close-approach date.
+# ⚙️ Technology Stack
 
-**Phase 3 — ML forecasting (notebook 05)**
+## Backend (Scientific Computing)
 
-Frame the problem as a time-series: given a NEO's orbital history and recent astrometric observations, forecast miss distance and impact probability over the next 50–100 years. Options:
+| Technology      | Purpose                   |
+| --------------- | ------------------------- |
+| Python          | Data processing           |
+| Astropy         | Astronomical calculations |
+| Poliastro       | Orbit propagation         |
+| Rebound         | N-body simulation         |
+| NumPy           | Numerical computing       |
+| Pandas / Polars | Data manipulation         |
+| PyTorch         | Deep learning             |
+| Prophet         | Time-series forecasting   |
+| XGBoost         | Risk classification       |
+| FastAPI         | Optional API layer        |
 
-- `Prophet` for interpretable trend + seasonality baselines
-- PyTorch LSTM on sequences of orbital element evolution
-- `N-BEATS` or `TiDE` (from `darts`) for deep-learning time-series
+---
 
-**Phase 4 — Risk scoring (notebook 06)**
+## Frontend
 
-Implement the Palermo Scale and Torino Scale formulas directly, then train an XGBoost classifier to predict risk category from your feature set (MOID, approach velocity, diameter, albedo, orbit uncertainty). This gives you a second opinion to validate against official Sentry scores.
+| Technology        | Purpose            |
+| ----------------- | ------------------ |
+| Next.js           | Web framework      |
+| TypeScript        | Type safety        |
+| Three.js          | 3D rendering       |
+| React Three Fiber | Declarative 3D     |
+| Drei              | R3F utilities      |
+| Zustand           | State management   |
+| Recharts          | Data visualization |
+| Framer Motion     | Animations         |
 
-**Phase 5 — Next.js 3D frontend**
+---
 
-Use `@react-three/fiber` (R3F) with `@react-three/drei` for the 3D canvas. Key pieces:
+# 🚀 Getting Started
 
-- Planets as `<Sphere>` with `<Line>` orbit rings computed from Keplerian elements in TypeScript
-- NEO trajectories as `<TubeGeometry>` built from the exported (x,y,z) arrays
-- Color the tube by risk level (green → amber → red)
-- A `<Html>` overlay from `@react-three/drei` for the click-to-inspect panel
-- Zustand store holds the current date, selected NEO, and playback state
-- A timeline slider drives an animation that morphs planet/NEO positions
-
-**Key libraries to install:**
+## Clone Repository
 
 ```bash
-# Python
-pip install poliastro astropy astroquery rebound numpy pandas polars \
-            torch prophet darts xgboost fastapi uvicorn pyarrow
+git clone https://github.com/ghpratik/neo-collision-sim.git
 
-# Next.js
-npm install three @react-three/fiber @react-three/drei \
-            recharts zustand @radix-ui/react-slider framer-motion
+cd neo-collision-sim
 ```
 
-The cleanest data handoff is Python writing `public/data/neos.json` (list of NEOs with metadata + risk score) and `public/data/trajectories/{id}.json` (time-stamped 3D point arrays). Next.js fetches these statically — no backend needed unless you want live propagation on demand.
+---
+
+## Python Setup
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Or manually:
+
+```bash
+pip install \
+poliastro \
+astropy \
+astroquery \
+rebound \
+numpy \
+pandas \
+polars \
+torch \
+prophet \
+darts \
+xgboost \
+fastapi \
+uvicorn \
+pyarrow
+```
+
+---
+
+## Frontend Setup
+
+```bash
+cd web
+
+pnpm install
+```
+
+Run development server:
+
+```bash
+pnpm run dev
+```
+
+---
+
+# 📈 Workflow
+
+### Phase 1: Data Acquisition
+
+- Fetch orbital elements
+- Fetch close-approach records
+- Normalize units
+- Validate datasets
+
+### Phase 2: Orbit Propagation
+
+- Generate future trajectories
+- Calculate MOID
+- Apply perturbation models
+
+### Phase 3: Monte Carlo Simulation
+
+- Sample orbital uncertainties
+- Propagate clones
+- Estimate impact probabilities
+
+### Phase 4: Forecasting
+
+- Train prediction models
+- Forecast miss distances
+- Predict risk categories
+
+### Phase 5: Visualization
+
+- Export trajectories to JSON
+- Render orbits in 3D
+- Animate future close approaches
+
+---
+
+# 📊 Output Data Format
+
+Example asteroid metadata:
+
+```typescript
+interface AsteroidSummary {
+  id: string;
+  name: string;
+  type: string;
+  pha: boolean;
+  diameter_km: number | null;
+  color: string;
+  risk_score: number;
+  predicted_hazard_probability: number | null;
+  close_approach_date: string | null;
+}
+```
+
+---
+
+# 🎯 Future Enhancements
+
+- Real-time orbit propagation API
+- WebAssembly orbital calculations
+- GPU-accelerated N-body simulations
+- AI anomaly detection
+- Earth impact visualization
+- Space mission planning tools
+- Multi-object collision analysis
+- Live NASA data synchronization
+
+---
+
+# 📜 License
+
+MIT License
+
+---
+
+# ⚠️ Disclaimer
+
+This project is intended for educational, research, and visualization purposes.
+
+Official impact assessments should always be obtained from NASA's Sentry System and other authoritative astronomical organizations.
